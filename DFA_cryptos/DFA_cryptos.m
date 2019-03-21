@@ -1,5 +1,5 @@
 %{
-Name of QuantLet : DFA_crypto
+Name of QuantLet : DFA_cryptos
 
 Published in : Genus_proximum_cryptos
 
@@ -14,7 +14,8 @@ Authors: Daniel Traian Pele, Niels Wesselhoft
 
 Submitted : Thu, 21 March 2019
 
-Datafiles : 'stats_dynamic.mat'
+Datafiles : 'stats_dynamic.mat'; 
+Note: Please download and extract the 5 rar volumes in order to get the datfile.
 
 *************************************************************;
 %}
