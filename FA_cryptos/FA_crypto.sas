@@ -1,5 +1,5 @@
 **********************************************
-Name of QuantLet : FA_crypto
+Name of QuantLet : FA_cryptos
 
 Published in : Genus_proximum_cryptos
 
