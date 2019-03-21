@@ -1,6 +1,6 @@
 %% Factor modelling of assets
 %{
-Name of QuantLet : SFA_crypto
+Name of QuantLet : SFA_cryptos
 
 Published in : Genus_proximum_cryptos
 
