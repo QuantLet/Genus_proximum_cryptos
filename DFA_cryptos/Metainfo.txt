@@ -1,10 +1,25 @@
 Name of QuantLet : DFA_cryptos
+
 Published in : Genus_proximum_cryptos
-Description : Dybnamic projection of a dataset of 23 variables, describing cryptos, 
+
+Description : 'Dynamic projection of a dataset of 23 variables, describing cryptos, 
 stocks, FX and commodities on a 3D space defined by the three factors
-extracted using Factor Analysis.
-Keywords : cryptocurrency, genus proximum, classiffication, multivariate analysis, factor models
-Authors: Daniel Traian Pele, Niels Wesselhoft
-Submitted : Thu, 21 March 2019
-Datafiles : 'stats_dynamic.mat'; 
-Note: Please download and extract the 5 rar volumes in order to get the datfile.
+extracted using Factor Analysis.'
+
+Keywords : 
+ - cryptocurrency
+ - genus proximum
+ - classiffication
+ - multivariate analysis
+ - factor models
+ 
+Author : Daniel Traian Pele, Niels Wesselhoft
+
+See also : 'SFA_cryptos, FA_cryptos'
+
+Submitted : Thu, 21 March 2019 by Daniel Traian Pele
+
+Datafiles : 'stats_dynamic.mat'
+
+Example : 
+- Please download and extract the 5 rar volumes in order to get the datafile
