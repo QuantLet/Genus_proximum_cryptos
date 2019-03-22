@@ -21,4 +21,4 @@ Submitted : Thu, 21 March 2019 by Daniel Traian Pele
 Datafiles : 'dataset_crypto.xlsx'
 
 Example : 
-- Run the code and the projection on 3 main factors
+- Run the code and get the projection on 3 main factors
