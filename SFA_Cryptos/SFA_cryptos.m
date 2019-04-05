@@ -1,6 +1,6 @@
 %% Factor modelling of assets
 %{
-Name of QuantLet : SFA_cryptos
+Name of QuantLet : SFA_crypto
 
 Published in : Genus_proximum_cryptos
 
@@ -54,7 +54,6 @@ rng(1)
 load stats_static.mat
 
 
-
 %% Corr
 
 h=figure();
@@ -73,14 +72,13 @@ colorbar();
 
 h=figure();
 Eig=eig(Rho);
-pareto(Eig);
-yyaxis left
+
+plot(Eig);
+
+xlim([1 7])
 xlabel('Factors')
 ylabel('Eigenvalue')
 
-yyaxis right
-ylabel('Cumulative variance proportion');
-xlabel('Factors');
 %print(h,'-depsc','-r300','class_vari') %-depsc
 
 %% Factor model
@@ -97,23 +95,63 @@ colorbar()
 set(gca,'XTick',[1:3])
 %print(h,'-depsc','-r300','class_rota') %-depsc
 
-%% Loadings
-user_factor=2
-for user_factor=[2 3]
+%% plot, correlation of the original variable with the PCs
 
-h=figure();    
-biplot(abs(loadings(:,[1 user_factor])),'VarLabels',est_labels)
-xlim([0 1]);ylim([0 1])
-xlabel('Tail Factor (absolute loadings)')
-if user_factor==2
-    ylabel('Moment factor (absolute loadings)')
-elseif user_factor==3
-    ylabel('Memory Factor (absolute loadings)')
-end
-%print(h,'-depsc','-r300','['class_map1' mat2str(user_factor)]) %-depsc
+figure
+hold on
+xlim([-1.2 1.2])
+ylim([-1.2 1.2])
+line([-1.2 1.2],[0 0],'Color','k')
+line([0 0],[1.2 -1.2],'Color','k')
+
+xlabel('Tail Factor')
+ylabel('Moment Factor')
+daspect([1,1,1])
+plot(exp((-1)^.5*[0:2*pi/360:2*pi]))        % plot unit circle
+box on
+rgb=[0 0 1];
+scatter(loadings(:,1),loadings(:,2), 'Filled');
+textfit(loadings(:,1),loadings(:,2),est_labels);
+hold off;
+
+
+figure
+hold on
+xlim([-1.2 1.2])
+ylim([-1.2 1.2])
+line([-1.2 1.2],[0 0],'Color','k')
+line([0 0],[1.2 -1.2],'Color','k')
+
+xlabel('Tail Factor')
+ylabel('Memory Factor')
+daspect([1,1,1])
+plot(exp((-1)^.5*[0:2*pi/360:2*pi]))        % plot unit circle
+box on
+rgb=[0 0 1];
+scatter(loadings(:,1),loadings(:,3), 'Filled');
+textfit(loadings(:,1),loadings(:,3),est_labels);
+hold off;
+
+figure
+hold on
+xlim([-1.2 1.2])
+ylim([-1.2 1.2])
+line([-1.2 1.2],[0 0],'Color','k')
+line([0 0],[1.2 -1.2],'Color','k')
+
+xlabel('Moment Factor')
+ylabel('Memory Factor')
+daspect([1,1,1])
+plot(exp((-1)^.5*[0:2*pi/360:2*pi]))        % plot unit circle
+box on
+rgb=[0 0 1];
+scatter(loadings(:,2),loadings(:,3), 'Filled');
+textfit(loadings(:,2),loadings(:,3),est_labels);
+hold off;
 
 %% Scores
-
+user_factor=2
+for user_factor=[2 3]
 color_assets=nan(n_assets,3);
 color_crypto=nan(n_assets,3);
 [~,index_type_raw]=unique(type_assets,'stable');
@@ -140,7 +178,7 @@ h=figure();
 scatter(F(:,1),F(:,user_factor),[],color_assets,'filled')
 text_delta=0.3;
 index_crypto=strcmp(type_assets,'Crypto');
-text(F(index_crypto,1)+text_delta,F(index_crypto,user_factor),...
+textfit(F(index_crypto,1)+text_delta,F(index_crypto,user_factor),...
     asset_unique(index_crypto));
 %if user_factor==2
     %ylim([-2 3.5])
