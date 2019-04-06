@@ -15,7 +15,7 @@ Author : Daniel Traian Pele
 
 See also : 'SFA_cryptos, FA_cryptos, DFA_cryptos'
 
-Submitted : Fri, 21 April 2019 by Daniel Traian Pele
+Submitted : Fri, 05 April 2019 by Daniel Traian Pele
 
 Datafiles : 'stats_dynamic.mat'
 
