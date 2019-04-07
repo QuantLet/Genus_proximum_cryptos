@@ -11,7 +11,7 @@ Keywords :
  - multivariate analysis
  - convergence
  
-Author : Daniel Traian Pele
+Author : Daniel Traian Pele and Niels Wesselhof
 
 See also : 'SFA_cryptos, FA_cryptos, DFA_cryptos'
 
