@@ -1,1 +1,19 @@
+Name of QuantLet : Mkt_cryptos
+
+Published in : Genus_proximum_cryptos
+
+Description : 'Plots the market capitalization of cryptocurrencies, retrived at the time of the plot.'
+
+Keywords : 
+ - cryptocurrency
+ - genus proximum
+ - classiffication
+ - market capitalization
+
+ 
+Author : Daniel Traian Pele
+
+See also : 'FA_cryptos, DFA_cryptos, SFA_cryptos'
+
+Submitted : Mon, 08 April 2019 by Daniel Traian Pele
 
