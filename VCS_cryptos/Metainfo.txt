@@ -11,7 +11,7 @@ Keywords :
  - multivariate analysis
  - complete separation
  
-Author : Michalis Kollosiatis and Yannis Yatracos
+Author : Michalis Kolossiatis and Yannis Yatracos
 
 See also : 'SFA_cryptos, FA_cryptos, DFA_cryptos'
 
