@@ -1,0 +1,56 @@
+A simple example for M=12 and the first 6 columns of the data analysed in the paper.
+
+Commands:
+>> load('23D_dataset.mat');
+>> M=12;
+>> componentsizes=[14;497;13;20];
+>> w1=stats(:,1:6);
+>> [minpropB,kkk,matrixminpropB]=MVCS_allinone_withdiscrproj(w1,M,componentsizes);
+
+Note: this combination of M and data columns is also analysed in the paper. Also, for that dataset, first we have the cryptocurrencies (14 of them), then the stocks (497 of them),
+then the exchange rates (13 of them) and finally the commodities (20 of them). Hence, the specific order of these numbers in componentsizes above.
+
+
+This should produce the following output:
+
+=========================================================================
+Results:
+
+Data dimension: 6
+Number of data components: 4
+Data components sizes: 14  497   13   20
+The angles (in degrees) used in projection directions were from the set: {15   30   45   60   75   90  105  120  135  150  165  180}
+Critical value for 5% significance of the index value is 0.017039
+
+Number of projection directions examined: 248832
+
+Component  Minimum misclassification proportion     Number of projection directions that give perfect classification
+1                            0                                            4263
+2                            0.058824                                            0
+3                            0.076923                                            0
+4                            0.5                                            0
+
+
+Results for each component:
+
+The maximum index value that provided perfect classification for component 1 was 0.18137
+and the corresponding projection direction was
+0.064705  -7.924e-18   7.924e-18     0.11207    -0.48296     0.86603
+All projection directions that provided perfect classification had index values that were statistically significant.
+
+No perfect classification for component 2
+The best classification of the elements of this component, corresponding to the minimum misclassification proportion above, is as follows:
+1 observations from component 2 are misclassified, i.e clustered with the observations from all other categories.
+31 observations from other categories are misclassified, i.e. clustered together with the observations of component 2.
+
+No perfect classification for component 3
+The best classification of the elements of this component, corresponding to the minimum misclassification proportion above, is as follows:
+1 observations from component 3 are misclassified, i.e clustered with the observations from all other categories.
+531 observations from other categories are misclassified, i.e. clustered together with the observations of component 3.
+
+No perfect classification for component 4
+The best classification of the elements of this component, corresponding to the minimum misclassification proportion above, is as follows:
+19 observations from component 4 are misclassified, i.e clustered with the observations from all other categories.
+1 observations from other categories are misclassified, i.e. clustered together with the observations of component 4.
+
+
