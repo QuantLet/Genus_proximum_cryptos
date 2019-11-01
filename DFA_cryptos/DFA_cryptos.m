@@ -1,22 +1,15 @@
 %{
 Name of QuantLet : DFA_cryptos
-
 Published in : Genus_proximum_cryptos
-
 Description : Dybnamic projection of a dataset of 23 variables, describing cryptos, 
 stocks, FX and commodities on a 3D space defined by the three factors
 extracted using Factor Analysis.
-
 Keywords : 
 cryptocurrency, genus proximum, classiffication, multivariate analysis, factor models
-
 Authors: Daniel Traian Pele, Niels Wesselhoft
-
 Submitted : Thu, 21 March 2019
-
 Datafiles : 'stats_dynamic.mat'; 
 Note: Please download and extract the 5 rar volumes in order to get the datfile.
-
 *************************************************************;
 %}
 
@@ -26,10 +19,10 @@ Note: Please download and extract the 5 rar volumes in order to get the datfile.
 
 clear;clc;
 
-% specify directoy for the files
-directory='D:\PROIECTE\berlin_2018\Final_code';
-addpath(genpath(directory))
-cd(directory)
+% specify directory for the files
+directory='D:\PROIECTE\Cryptos 2019\Data';
+addpath(genpath(directory));
+cd(directory);
 
 %set global commands for font size and line width
 size_font=9;
@@ -54,22 +47,52 @@ rng(1)
 
 %% Data
 
-load stats_dynamic.mat
+load data_dynamic.mat
+
+
+
+
+
+
+
+%% Subset
+
+subset=[1:3 4 6   8:23 26:27];
+%subset=[1:27];
+ stats_s=stats_raw(:,subset);
+
+est_labels_raw={'Variance'; 'Skewness';'Kurtosis';...
+    'Stable \alpha';'Stable \beta';'Stable \gamma';...
+    'Stable \delta';'Q_{5%}';'Q_{2.5%}';'Q_{1%}';'Q_{0.5%}';...
+    'CTE_{5%}';'CTE_{2.5%}';'CTE_{1%}';'CTE_{0.5%}';...
+    'Q_{95%}';'Q_{97.5%}';'Q_{99%}';'Q_{99.5%}';...
+    'CTE_{95%}';'CTE_{97.5%}';'CTE_{99%}';'CTE_{99.5%}';...
+    'ACF Lag 1'; 'Hurst';'GARCH parameter';'ARCH parameter'};
+est_labels=est_labels_raw(subset,1);
+
+
+
+
+
+
+%% Factor model
+
+[loadings,F,f2] = factor_an_static(stats_s);
 
 
 
 %% Expanding window factor model
 
-t_start=ceil(t_max/3);
+t_start=ceil(t_max/2);
 user_factor=2;
-h=figure();
+
 
 % init
 %loadings=[];
 
 
 
-for j=[1:100:901 971]%(t_max-t_start)
+for j=1:740%(t_max-t_start)
     
     % stats for one point in time
     stats_t=stats(:,:,j);
@@ -81,14 +104,18 @@ for j=[1:100:901 971]%(t_max-t_start)
     parms_nan=sum(isnan(stats_t),1)>0;
     stats_t(:,parms_nan)=[0];
     Rho=corr(stats_t);
+    Rho(isnan(Rho))=0;
     n1 = length(stats_t);
     m  = mean(stats_t);
     zz = (stats_t - repmat(m,n1,1))./repmat(sqrt(var(stats_t)), n1, 1);
+   zz(isnan(zz))=0;
+    %f2=inv(Rho)*loadings;
 
-    F=transpose(f2*transpose(zz));
-    F(:,2)=-F(:,2);
-
-
+    % F contains the final scores after the varimax rotation;
+    F=zz*f2;
+    
+     
+   
     % colors
     n_assets_t=length(stats_t);
     type_assets_t=type_assets;
@@ -101,7 +128,12 @@ for j=[1:100:901 971]%(t_max-t_start)
     index_type=[index_type_raw; n_assets_t];
     n_types=length(index_type(1:end-1));
 
-    
+    index_crypto=strcmp(type_assets_t,'Crypto');
+
+    Check = {'BTC','ETH','XRP','BCH','LTC','USDT',	'BNB','EOS','BSV','XMR'}';  
+
+    Match=cellfun(@(x) ismember(x, Check), symb_assets, 'UniformOutput', 0);
+    index_show=find(cell2mat(Match));
     
     for i=1:n_assets_t
         if strcmp(type_assets_t{i},'Crypto')==1
@@ -121,61 +153,59 @@ for j=[1:100:901 971]%(t_max-t_start)
 
     
     % plot
-    scatter(F(:,1),F(:,user_factor),[],color_assets,'filled')
-    text_delta=0.3;
-    index_crypto=strcmp(type_assets_t,'Crypto');
-    text(F(index_crypto,1)+text_delta,F(index_crypto,user_factor),...
-    asset_unique(index_crypto));
+   h=figure();
+scatter(F(:,1),F(:,user_factor),[],color_assets,'filled')
+text_delta=0.03;
 
-    xlabel('Tail Factor')
-    if user_factor==2
-        ylim([-6 12])
-        xlim([-5 18])
-        ylabel('Moment factor')
-    elseif user_factor==3
-        ylim([-6 8])
-        xlim([-4 12])
-        ylabel('Memory Factor')
-    end
+text(F(index_show,1)+text_delta,F(index_show,user_factor),...
+   symb_assets(index_show));
+
+
+    ylabel('Moment factor');
+    xlabel('Tail Factor');
+
+    ylim([-3 6])
+    xlim([-5 2])
+
     progress=(j+t_start-1)/t_max*100;
     title(['Data:',' ',datestr(date_unique(1)),' - ',...
         datestr(date_unique(j+t_start-1)),' (',mat2str(round(progress,1)),'%)'])
 
-    hold on
+hold on
 
-    for i=1:n_types
-        if i==1
-            user_color=color_green;
-        elseif i==2
-            user_color=color_black;
-        elseif i==3
-            user_color=color_blue;
-        elseif i==4
-            user_color=color_red;
-        end
-    x=[F(index_type(i):index_type(i+1)-1,1),...
-        F(index_type(i):index_type(i+1)-1,user_factor)];
+for i=1:n_types
 
-    grid_add=3;
-    grid_x=min(x(:,1))-grid_add:0.1:max(x(:,1)+grid_add);
-    grid_y=min(x(:,2))-grid_add:0.05:max(x(:,2)+grid_add);
-    [x1_raw,x2_raw] = meshgrid(grid_x, grid_y);
-    x1 = x1_raw(:);
-    x2 = x2_raw(:);
-    xi=[x1,x2];
-    fd=ksdensity(x,xi,'PlotFcn','contour');
+    if i==1
+        user_color=color_red;
+    elseif i==2
+        user_color=color_green;
+    elseif i==3
+        user_color=color_blue;
+    elseif i==4
+        user_color=color_black;
+    end
+x=[F(index_type(i):index_type(i+1)-1,1),...
+    F(index_type(i):index_type(i+1)-1,user_factor)];
 
-    user_level=0.015;
-    [C,~]=contour(grid_x,grid_y,reshape(fd,length(grid_y),length(grid_x)),[user_level,user_level],...
-        'color',user_color,'linewidth',1.5);
+grid_add=1.15;
+grid_x=min(x(:,1))-grid_add:0.05:max(x(:,1)+grid_add);
+grid_y=min(x(:,2))-grid_add:0.05:max(x(:,2)+grid_add);
+[x1_raw,x2_raw] = meshgrid(grid_x, grid_y);
+x1 = x1_raw(:);
+x2 = x2_raw(:);
+xi=[x1 x2];
+
+
+fd=mvksdensity(x,xi,'PlotFcn','contour');
+
+user_level=0.05;
+[C,~]=contour(grid_x,grid_y,reshape(fd,length(grid_y),length(grid_x)),[user_level,user_level],...
+    'color',user_color,'linewidth',1.5);
     end
 
-    print(h,'-dpng','-r300',strcat('class_1',mat2str(user_factor),'_',mat2str(j))) %-depsc
+   print(h,'-dpng','-r300',strcat('class_1',mat2str(user_factor),'_',mat2str(j))) %-depsc
 
     hold off
-   % close(h)
+   close(h)
  
 end
-    
-
-

@@ -19,7 +19,7 @@ See also : 'SFA_cryptos, FA_cryptos'
 
 Submitted : Thu, 21 March 2019 by Daniel Traian Pele
 
-Datafiles : 'stats_dynamic.mat'
+Datafiles : 'data_dynamic.mat'
 
 Example : 
 - Please download and extract the 5 rar volumes in order to get the datafile

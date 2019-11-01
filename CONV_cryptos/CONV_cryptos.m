@@ -5,7 +5,7 @@
 clear;clc;
 
 % specify directoy for the files
-directory='D:\PROIECTE\berlin_2018\Final_code';
+directory='D:\PROIECTE\Cryptos 2019\Data';
 addpath(genpath(directory))
 cd(directory)
 
@@ -32,21 +32,35 @@ rng(1)
 
 %% Data
 
-load stats_dynamic.mat
+load data_dynamic.mat
+
+subset=[1:3 4 6   8:23 26:27];
+%subset=[1:27];
+ stats_s=stats_raw(:,subset);
+
+est_labels_raw={'Variance'; 'Skewness';'Kurtosis';...
+    'Stable \alpha';'Stable \beta';'Stable \gamma';...
+    'Stable \delta';'Q_{5%}';'Q_{2.5%}';'Q_{1%}';'Q_{0.5%}';...
+    'CTE_{5%}';'CTE_{2.5%}';'CTE_{1%}';'CTE_{0.5%}';...
+    'Q_{95%}';'Q_{97.5%}';'Q_{99%}';'Q_{99.5%}';...
+    'CTE_{95%}';'CTE_{97.5%}';'CTE_{99%}';'CTE_{99.5%}';...
+    'ACF Lag 1'; 'Hurst';'GARCH parameter';'ARCH parameter'};
+est_labels=est_labels_raw(subset,1);
 
 
 
 %% Expanding window factor model
 
-t_start=ceil(t_max/3);
+t_start=ceil(t_max/2);
 user_factor=2;
 
+    
 
 % init
-%loadings=[];
+[loadings,F,f2] = factor_an_static(stats_s);
 
 
-for j=[1:971]%(t_max-t_start)
+for j=[1:740]%(t_max-t_start)
     time(j,1)=datetime(date_unique(j+t_start-1,1),'ConvertFrom','datenum');
     % stats for one point in time
     stats_t=stats(:,:,j);
@@ -58,14 +72,18 @@ for j=[1:971]%(t_max-t_start)
     parms_nan=sum(isnan(stats_t),1)>0;
     stats_t(:,parms_nan)=[0];
     Rho=corr(stats_t);
+    Rho(isnan(Rho))=0;
     n1 = length(stats_t);
     m  = mean(stats_t);
     zz = (stats_t - repmat(m,n1,1))./repmat(sqrt(var(stats_t)), n1, 1);
+    zz(isnan(zz))=0;
+    %f2=inv(Rho)*loadings;
 
-    F=transpose(f2*transpose(zz));
-    F(:,2)=-F(:,2);
+    % F contains the final scores after the varimax rotation;
+    F=zz*f2;
 
 type_crypto=strcmp(type_assets,'Crypto');
+
 type_crypto_mod=type_crypto+1;
 
 c=zeros(size(type_crypto_mod));
@@ -73,37 +91,37 @@ df=n_assets-2;
 
 
 for i=1
-    [est_reg_para,est_reg_dev,est_reg_stats]=mnrfit(F(:,1),type_crypto_mod);
-    [est_reg_dev_null]=mnrfit([],type_crypto_mod);
+    
+   
+   mdl = fitglm(F(:,1),type_crypto,'Distribution','binomial');
+   tbl = table2array(devianceTest(mdl));
 end
-    Dev_F1(j,1)=est_reg_dev;
-    Dev_null_F1(j,1)=est_reg_dev_null;
-    D1(j,1)=Dev_F1(j,1)- Dev_null_F1(j,1);
-    Chi_F1(j,1)=1-chi2cdf(D1(j,1),1);
+    Dev_F1(j,1)=tbl(2,1);
+    p_value_F1(j,1)=tbl(2,4);
+
     
 for i=2
-    [est_reg_para,est_reg_dev,est_reg_stats]=mnrfit(F(:,2),type_crypto_mod);
-    [est_reg_dev_null]=mnrfit([],type_crypto_mod);
+   mdl = fitglm(F(:,2),type_crypto,'Distribution','binomial');
+     tbl = table2array(devianceTest(mdl));
 end
-    Dev_F2(j,1)=est_reg_dev;
-    Dev_null_F2(j,1)=est_reg_dev_null;
-    D2(j,1)=Dev_F2(j,1)- Dev_null_F2(j,1);
-    Chi_F2(j,1)=1-chi2cdf(D2(j,1),1);
- 
+     Dev_F2(j,1)=tbl(2,1);
+    p_value_F2(j,1)=tbl(2,4);
+
 for i=3
-    [est_reg_para,est_reg_dev,est_reg_stats]=mnrfit(F(:,3),type_crypto_mod);
-    [est_reg_dev_null]=mnrfit([],type_crypto_mod);
+   mdl = fitglm(F(:,3),type_crypto,'Distribution','binomial');
+     tbl = table2array(devianceTest(mdl));
 end
-    Dev_F3(j,1)=est_reg_dev;
-    Dev_null_F3(j,1)=est_reg_dev_null;
-    D3(j,1)=Dev_F3(j,1)- Dev_null_F3(j,1);
-    Chi_F3(j,1)=1-chi2cdf(D3(j,1),1);
+      Dev_F3(j,1)=tbl(2,1);
+      p_value_F3(j,1)=tbl(2,4);
+
  
    
 end
 %Conv_index_1=1-(Dev_F1)/max(Dev_F1)
 %Conv_index_2=1-(Dev_F2)/max(Dev_F2)
 %Conv_index_3=1-(Dev_F3)/max(Dev_F3)
+
+%% Figures
 h=figure()
 y_lim=[0 140];
 
@@ -131,9 +149,9 @@ plot(time,Dev_F3);
 ylabel('Likelihood Ratio');
 xlabel('Time');
 
-title(ax3,'Memory Factor');
+title(ax3,'GARCH Factor');
 
-y_lim=[0 0.2];
+y_lim=[0 0.05];
 
 h=figure()
 
@@ -141,14 +159,14 @@ h=figure()
 ax1 = subplot(3,1,1); % top subplot
 
 
-plot(time,Chi_F1);
+plot(time, p_value_F1);
 ylim(y_lim);
 ylabel('P-value');
 xlabel('Time');
 title(ax1,'Tail Factor');
 
 ax2 = subplot(3,1,2); % bottom subplot
-plot( time,Chi_F2);
+plot( time, p_value_F2);
 ylim(y_lim);
 ylabel('P-value');
 xlabel('Time');
@@ -156,10 +174,14 @@ xlabel('Time');
 title(ax2,'Moment factor')
 
 ax3 = subplot(3,1,3); % bottom subplot
-plot(time,Chi_F3);
+plot(time, p_value_F3);
 ylim(y_lim);
 ylabel('P-value');
 xlabel('Time');
 
-title(ax3,'Memory Factor');
+title(ax3,'GARCH Factor');
 
+
+   
+   
+ 

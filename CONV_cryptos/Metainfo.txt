@@ -17,7 +17,7 @@ See also : 'SFA_cryptos, FA_cryptos, DFA_cryptos'
 
 Submitted : Fri, 05 April 2019 by Daniel Traian Pele
 
-Datafiles : 'stats_dynamic.mat'
+Datafiles : 'data_dynamic.mat'
 
 
 Example : 
