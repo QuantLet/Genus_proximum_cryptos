@@ -75,7 +75,7 @@ text(F1(index_type_raw)+text_delta,F3(index_type_raw),F2(index_type_raw), num2st
 
 xlabel('Tail factor');
 
-    ylabel('GARCH factor');
+    ylabel('Memory factor');
 zlabel('Moment factor');
 axis tight; box on; 
 %print(h,'-depsc','-r300','['class_scat1' mat2str(user_factor)]) %-depsc
