@@ -23,7 +23,7 @@ Q     =sqrt(E).*eigvec(:,1:3);
 % T is the Orthogonal Transformation Matrix;
 loadings=ld;
 loadings(:,2)=-ld(:,3);
-loadings(:,3)=ld(:,2);
+loadings(:,3)=-ld(:,2);
 % f2 contains the standardized scoring coefficients;
 f2=inv(Rho)*loadings;
 
