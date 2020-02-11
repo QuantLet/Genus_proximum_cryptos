@@ -149,7 +149,7 @@ plot(time,Dev_F3);
 ylabel('Likelihood Ratio');
 xlabel('Time');
 
-title(ax3,'GARCH Factor');
+title(ax3,'Memory Factor');
 
 y_lim=[0 0.05];
 
@@ -179,7 +179,7 @@ ylim(y_lim);
 ylabel('P-value');
 xlabel('Time');
 
-title(ax3,'GARCH Factor');
+title(ax3,'Memory Factor');
 
 
    
