@@ -250,7 +250,7 @@ line([-1.2 1.2],[0 0],'Color','k')
 line([0 0],[1.2 -1.2],'Color','k')
 
 xlabel('Tail Factor')
-ylabel('GARCH factor')
+ylabel('Memory factor')
 daspect([1,1,1])
 plot(exp((-1)^.5*[0:2*pi/360:2*pi]))        % plot unit circle
 box on
@@ -267,7 +267,7 @@ line([-1.2 1.2],[0 0],'Color','k')
 line([0 0],[1.2 -1.2],'Color','k')
 
 xlabel('Moment Factor')
-ylabel('GARCH factor')
+ylabel('Memory factor')
 daspect([1,1,1])
 plot(exp((-1)^.5*[0:2*pi/360:2*pi]))        % plot unit circle
 box on
@@ -319,7 +319,7 @@ xlabel('Tail factor');
 if user_factor==2
     ylabel('Moment factor');
 elseif user_factor==3
-    ylabel('GARCH factor');
+    ylabel('Memory factor');
 end
 
 hold on
@@ -369,7 +369,7 @@ text(F(index_show,2)+text_delta,F(index_show,3),...
 
 xlabel('Moment factor');
 
-ylabel('GARCH factor');
+ylabel('Memory factor');
 hold on
 
 for i=1:n_types
@@ -823,4 +823,6 @@ C = confusionmat(IDX,predict);
 confusionchart(C);
 
 accuracy = sum(diag (C))/sum(C,'all');
+
+
 
