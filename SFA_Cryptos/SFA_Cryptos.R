@@ -76,7 +76,7 @@ library(e1071)
 # Variance, Skewness, Kurtosis, Stable_alpha, Stable_gamma, Quantiles, 
 # Conditional Tail Expectations,ARCH and GARCH parameters.
 #   
-data <- read.csv("23D.csv")
+data <- read.csv("23D_2020.csv")
 
 head(data)
 stats=data[4:26]
