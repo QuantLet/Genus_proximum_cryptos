@@ -119,7 +119,7 @@ index_del3=find(strcmp('MetrixCoin_MRX',asset_unique)==1);
 index_del4=find(strcmp('UnderArmourClass_UAA',asset_unique)==1);
 index_del5=find(strcmp('UnderArmourClass_UA',asset_unique)==1);
 %index_del6=find(strcmp('CAFENATL_INDEX_CAFEN',asset_unique)==1);
-%index_del7=find(strcmp('Tether_USDT',asset_unique)==1);
+index_del7=find(strcmp('Tether_USDT',asset_unique)==1);
 %asset_unique([index_del,index_del2,index_del3, index_del4, index_del5,index_del6, index_del7])=[];
 %index_unique([index_del,index_del2,index_del3, index_del4, index_del5,index_del6, index_del7])=[];
 asset_unique([index_del,index_del2,index_del3,index_del4, index_del5])=[];
@@ -280,11 +280,12 @@ hold off;
 
 index_crypto=strcmp(type_assets,'Crypto');
 
-Check = {'BTC','ETH','XRP','BCH','LTC','USDT',	'BNB','EOS','BSV','XMR'}';  
+Check = {'BTC','ETH','XRP','BCH','LTC','USDT',	'BNB','EOS','XMR'}';  
 
 Match=cellfun(@(x) ismember(x, Check), symb_assets, 'UniformOutput', 0);
 index_show=find(cell2mat(Match));
 %user_factor=2
+
 for user_factor=2:3
 color_assets=nan(n_assets,3);
 color_crypto=nan(n_assets,3);
@@ -301,10 +302,10 @@ for i=1:n_assets
         color_crypto(i,:)=color_black;
     elseif strcmp(type_assets{i},'Exchange rate')==1
         color_assets(i,:)=color_blue;
-        color_crypto(i,:)=color_black;
+        color_crypto(i,:)=color_blue;
     elseif strcmp(type_assets{i},'Commodity')==1
         color_assets(i,:)=color_red;
-        color_crypto(i,:)=color_black;
+        color_crypto(i,:)=color_red;
     end
 end
 
@@ -415,7 +416,7 @@ scatter3(F(:,1),F(:,2),F(:,3),[],color_assets,'filled');
 type_crypto=strcmp(type_assets,'Crypto');
 type_crypto_mod=type_crypto+1;
 
-    [est_reg_para,est_reg_dev,est_reg_stats]=glmfit(F(:,1),type_crypto,'binomial','link','logit');
+[est_reg_para,est_reg_dev,est_reg_stats]=glmfit(F(:,1),type_crypto,'binomial','link','logit','constant' ,'off');
 
 
 
@@ -452,10 +453,10 @@ plot(F(bad,1), F(bad,2), 'rx');
 if user_factor==3
     ylim([-2.5 2.5])
 else
-    ylim([-3 6])
+    ylim([-3 14])
 end
 
-xlim([-5 2]);
+xlim([-1 3]);
 title '';
 text_delta=0.03;
 text(F(index_show,1)+text_delta,F(index_show,user_factor),...
@@ -499,7 +500,7 @@ title '';
 text_delta=0.03;
 text(F(index_show,1)+text_delta,F(index_show,3),...
    symb_assets(index_show));
-xlabel('Tail Factor');ylabel('GARCH Factor');
+xlabel('Tail Factor');ylabel('Memory factor');
 hold off;
 
 %% Linear Classification-3
@@ -536,7 +537,7 @@ title '';
 text_delta=0.03;
 text(F(index_show,2)+text_delta,F(index_show,3),...
    symb_assets(index_show));
-xlabel('Moment Factor');ylabel('GARCH Factor');
+xlabel('Moment Factor');ylabel('Memory factor');
 hold off;
 
 %% Quadratic Classification
@@ -550,10 +551,10 @@ text(F(index_show,1)+text_delta,F(index_show,user_factor),...
 if user_factor==3
     ylim([-2.5 2.5])
 else
-    ylim([-3.2 6])
+    ylim([-3.2 14])
 end
 
-xlim([-5 2]);
+xlim([-1 4]);
 hold on;
 % Quadratic discriminant analysis
 lda = fitcdiscr(F(:,[1 user_factor]),type_crypto,'DiscrimType','quadratic');
@@ -611,7 +612,7 @@ ldaClass = resubPredict(lda);
 
 bad = ldaClass~=type_crypto;
 plot(F(bad,1), F(bad,3), 'rx');
-xlabel('Tail Factor');ylabel('GARCH Factor');
+xlabel('Tail Factor');ylabel('Memory factor');
 
 
 title '';
@@ -648,7 +649,7 @@ ldaClass = resubPredict(lda);
 
 bad = ldaClass~=type_crypto;
 plot(F(bad,2), F(bad,3), 'rx');
-xlabel('Moment Factor');ylabel('GARCH Factor');
+xlabel('Moment Factor');ylabel('Memory factor');
 
 
 title '';
@@ -681,7 +682,7 @@ text(F(index_show,1)+text_delta,F(index_show,user_factor),...
 if user_factor==3
     ylim([-2.5 2.5])
 else
-    ylim([-3 6])
+    ylim([-3 12])
 end
 
 xlim([-5 3]);
@@ -699,6 +700,13 @@ SVM = fitcsvm(F(:,1:2),type_crypto,'KernelFunction','rbf',...
     'BoxConstraint',Inf,'ClassNames',[0,1]);
 SVMM = fitPosterior(SVM);
 
+%% Perform cross-validation
+partitionedModel = crossval(SVM, 'KFold', 10);
+% Compute validation predictions
+[validationPredictions, validationScores] = kfoldPredict(partitionedModel);
+% Compute validation accuracy
+validation_error = kfoldLoss(partitionedModel, 'LossFun', 'ClassifError'); % validation error
+validationAccuracy = 1 - validation_error;
 
 %% SVM2
 user_factor=3;
@@ -731,7 +739,7 @@ hold on
 contour(x1Grid,x2Grid,reshape(scores(:,2),size(x1Grid)),[0 0],'color',color_red,'linewidth',2);
 
 title('');
-xlabel('Tail Factor');ylabel('GARCH Factor');
+xlabel('Tail Factor');ylabel('Memory factor');
 hold off
 %print(h,'-depsc','-r300','class_svm') %-depsc
 
@@ -766,7 +774,7 @@ hold on
 contour(x1Grid,x2Grid,reshape(scores(:,2),size(x1Grid)),[0 0],'color',color_red,'linewidth',2);
 
 title('');
-xlabel('Moment Factor');ylabel('GARCH Factor');
+xlabel('Moment Factor');ylabel('Memory factor');
 hold off
 %print(h,'-depsc','-r300','class_svm') %-depsc
 
@@ -804,7 +812,7 @@ t = templateSVM('Standardize',true);
 
 
 Mdl = fitcecoc(F,IDX,'Learners',t,...
-    'ClassNames',{'1' ,'2', '3' ,'4' ,'5' ,'6', '7' ,'8','9','10'});
+    'ClassNames',{'1' ,'2', '3' ,'4' ,'5' ,'6', '7' ,'8','9','10','11'});
 
 CVMdl = crossval(Mdl);
 genError = kfoldLoss(CVMdl)
@@ -823,6 +831,4 @@ C = confusionmat(IDX,predict);
 confusionchart(C);
 
 accuracy = sum(diag (C))/sum(C,'all');
-
-
 
