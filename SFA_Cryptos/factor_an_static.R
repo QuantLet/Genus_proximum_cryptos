@@ -34,10 +34,11 @@ factor_an_static <- function(X)
   # Rotating loadings
   ld=varimax(Q, normalize = TRUE, eps=0.0001)
   
-  loadings=ld$loadings
   
-  loadings[,2]=ld$loadings[,3];
-  loadings[,3]=ld$loadings[,2];
+  loadings=ld$loadings
+  loadings[,1]=-ld$loadings[,1];
+  loadings[,2]=ld$loadings[,2];
+  loadings[,3]=ld$loadings[,3];
   
   # f2 contains the standardized scoring coefficients;
   f2=inv(Rho)%*%loadings;
