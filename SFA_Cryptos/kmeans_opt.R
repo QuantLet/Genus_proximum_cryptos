@@ -25,8 +25,8 @@ X=F
 
 m=nrow(X) #getting the number of samples
 ToTest=ceil(sqrt(m))
-Cutoff=0.95
-Repeats=20
+Cutoff=0.90
+Repeats=30
 #unit-normalize
 MIN=min(X)
 MAX=max(X)
@@ -59,7 +59,7 @@ K
 km=kmeans(X,K) #now rerun one last time with the optimal number of clusters
 C=km$centers
 C=C*(MAX-MIN)+MIN
-IDX=calc_mat2mat_dist(X, km$centers)[,11]
+IDX=calc_mat2mat_dist(X, km$centers)[,12]
 return(list(C=C, K=K, IDX=IDX))
 
 }

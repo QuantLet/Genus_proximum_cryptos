@@ -17,7 +17,8 @@
 rm(list = ls())
 graphics.off()
 
-setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\SFA_Cryptos")
+#setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\SFA_Cryptos")
+setwd("/home/rstudio/SFA_Cryptos/")
 
 #Packages
 # install.packages("kernlab")
@@ -76,7 +77,7 @@ library(e1071)
 # Variance, Skewness, Kurtosis, Stable_alpha, Stable_gamma, Quantiles, 
 # Conditional Tail Expectations,ARCH and GARCH parameters.
 #   
-data <- read.csv("23D_2020.csv")
+data <- read.csv("23D.csv")
 
 head(data)
 stats=data[4:26]
@@ -420,7 +421,8 @@ dev.off()
 ###K-means clustering
 ##################################
 k_opt=kmeans_opt(DF[,1:3])
-
+k_opt$K
+k_opt$IDX
 png("3D_Scatter_Clusters.png")
 
 scatterplot3d(DF[,1:3], pch = 16, color=as.numeric(k_opt$IDX),   main="3D Scatter Plot",

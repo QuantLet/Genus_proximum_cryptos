@@ -4,7 +4,7 @@
 # method, followed by a VARIMAX rotation to insure orthogonality of the factors.
 factor_an_static <- function(X) 
 {
-  n1 = nrow(X)
+  n1 = nrow(X);
   m  = colMeans(X, na.rm = FALSE, dims = 1)
   # standardizing data
   
@@ -35,9 +35,9 @@ factor_an_static <- function(X)
   ld=varimax(Q, normalize = TRUE, eps=0.0001)
   
   loadings=ld$loadings
-  
-  loadings[,2]=ld$loadings[,3];
-  loadings[,3]=ld$loadings[,2];
+  loadings[,1]=-ld$loadings[,1];
+  loadings[,2]=ld$loadings[,2];
+  loadings[,3]=ld$loadings[,3];
   
   # f2 contains the standardized scoring coefficients;
   f2=inv(Rho)%*%loadings;

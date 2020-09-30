@@ -19,9 +19,9 @@
 #- Clear Environment -#
 rm(list = ls())
 graphics.off()
-
-setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\DFA_Cryptos")
-
+options(warn=-1)
+#setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\DFA_Cryptos")
+setwd("/home/rstudio/DFA_Cryptos/")
 
 #Packages
 # install.packages("kernlab")
@@ -81,6 +81,7 @@ library(scales)
 # factor and the moment factor, estimated for the entire time period.
 # #   
 
+options(warn=-1)
 data_dynamic <- read.csv('dynamic_dataset.csv') #dynamic dataset
 data <- read.csv("23D.csv") #static dataset
 stats=data[4:26]
@@ -134,21 +135,21 @@ for (i in c(50,300,500,740))
   # points(F[index_show,1],  F[index_show,2],col="green",pch = 20,type="p",cex = 1.8)
   # text(F[index_show,1],  F[index_show,2], Check,cex = 1) 
   progress=percent(i/n_waves)
-  ttl=paste("Data: 01-Jan-2014 - ",
-               format(as.Date(stats_t$Date[1]), "%d-%b-%Y")," (",progress,")",sep="")
-
-
+  ttl=paste("Data: 1/1/2014 - ",stats_t$Date[1]," (",progress,")",sep="")
+  
+  
   p1<-ggplot( DF, aes( X1, X2))+  geom_point(aes(color = type_assets),size = 2) + 
-    xlim(-5,2)+
-    ylim(-3,6)+
+    xlim(-1,8)+
+    ylim(-3,14)+
     scale_color_manual(values = c("red", "green", "blue","black"))+theme_classic()+
     geom_text(data = filter(DF, label_show==1),aes(label=symb_assets))+
     labs(title = ttl,x="Tail Factor", y="Moment factor")+ 
     geom_density_2d(aes(color = type_assets),contour=TRUE)
   print(p1)
   
-
+  
   
 }
 
+# See the created plots.
 

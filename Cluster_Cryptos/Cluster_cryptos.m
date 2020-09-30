@@ -36,58 +36,78 @@ rng(1)
 %% Data
 
 
-load clusters.mat;
+load clusters_2020.mat;
 
 %% Scores
 
 index_crypto=strcmp(type_assets,'Crypto');
 
-Check = {'BTC','USDT','XRP','BCH','KMD','ETH','EOS'};  
+Check = {'BTC','USDT'};  
 
-Match=cellfun(@(x) ismember(x, Check), symbol, 'UniformOutput', 0);
+Match=cellfun(@(x) ismember(x, Check), symb_assets, 'UniformOutput', 0);
 index_show=find(cell2mat(Match));
 n_assets=679;
 %user_factor=2
 
-color_assets=repmat(0,n_assets,1);
-color_crypto=nan(n_assets,1);
-[~,index_type_raw]=unique(cluster_new,'stable');
-index_type=[index_type_raw; n_assets];
-n_types=6;
-index_type_raw(3,1)=610;
-index_type_raw(4,1)=620;
-index_type_raw(5,1)=656;
 
+n_types=11;
+
+
+
+%%
+
+%% K-means
+
+
+rng(1); % For reproducibility
+[IDX,C,SUMD,K]=kmeans_opt(F);
+
+[IDX,C, ~, D] = kmeans(F,K); % D is the distance of each datapoint to each of  the clusters
+[minD, indMinD] = min(D); % indMinD(i) is the index (in X) of closest point to the i-th centroid
+ptsymb = {'bs','r^','md','go','c+', '*','h','o','p','d','ko'};
+text_delta=0.03;
 h=figure();
+%scatter3(F(:,1),F(:,2),F(:,3));
 
-text_delta=0.1;
-scatter3(F1,F3,F2,30,cluster_new,'filled');
 cmap = jet(10);    %or build a custom color map
 map = [0 0 0
     1 1 0
     1 0 1
     1 0 0
     0 1 0
-    0 0 1];
+    0 0 1
+    0 0.5 0
+    0.5 0.5 0
+    1 0.5 0.5
+    0 0.8 0
+    0.8 0 0.5];
 colormap( map );
-text(F1(index_show)-4*text_delta,F3(index_show)-3*text_delta,F2(index_show)+2*text_delta,symbol(index_show));
-text(F1(index_type_raw)+text_delta,F3(index_type_raw),F2(index_type_raw), num2str(cluster_new(index_type_raw)));
 
-xlabel('Tail factor');
+ 
 
-    ylabel('Memory factor');
-zlabel('Moment factor');
-axis tight; box on; 
-%print(h,'-depsc','-r300','['class_scat1' mat2str(user_factor)]) %-depsc
-%view(5,3);
+    %colormap(jet(11));
+    scatter3(F(:,1),F(:,2),F(:,3),40,IDX,'filled');
+  text(F(index_show,1)+text_delta,F(index_show,2)+text_delta,F(index_show,3)-4*text_delta,symb_assets(index_show));
+     hold on
+
+
+
+
+%plot3(cmeans2(:,1),cmeans2(:,2),cmeans2(:,3),'ko');
+%plot3(cmeans2(:,1),cmeans2(:,2),cmeans2(:,3),'kx');
 hold off
-F=[F1(:), F2(:),F3(:)];
-Mdl = fitcecoc(F,cluster_new);
+xlabel('Tail Factor');
+ylabel('Moment Factor');
+zlabel('Memory Factor');
+%view(-137,10);
+grid on;
+
+Mdl = fitcecoc(F,IDX);
 t = templateSVM('Standardize',true);
 
 
-Mdl = fitcecoc(F,cluster_new,'Learners',t,...
-    'ClassNames',{'1' ,'2', '3' ,'4' ,'5' ,'6'});
+Mdl = fitcecoc(F,IDX,'Learners',t,...
+    'ClassNames',{'1' ,'2', '3' ,'4' ,'5' ,'6', '7' ,'8','9','10','11'});
 
 CVMdl = crossval(Mdl);
 genError = kfoldLoss(CVMdl)
@@ -102,7 +122,8 @@ h=figure();
 CVMdl = crossval(Mdl);
 oofLabel = kfoldPredict(CVMdl);
 predict= str2double(oofLabel);
-C = confusionmat(cluster_new,predict);
+C = confusionmat(IDX,predict);
 confusionchart(C);
 
-accuracy = sum(diag (C))/sum(C,'all');
+accuracy = sum(diag (C))/sum(C,'all')
+

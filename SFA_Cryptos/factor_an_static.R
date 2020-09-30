@@ -34,7 +34,6 @@ factor_an_static <- function(X)
   # Rotating loadings
   ld=varimax(Q, normalize = TRUE, eps=0.0001)
   
-  
   loadings=ld$loadings
   loadings[,1]=-ld$loadings[,1];
   loadings[,2]=ld$loadings[,2];

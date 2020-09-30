@@ -19,7 +19,8 @@
 rm(list = ls())
 graphics.off()
 
-setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\Conv_Cryptos")
+#setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\Conv_Cryptos")
+setwd("/home/rstudio/Conv_Cryptos/")
 
 
 #Packages
@@ -158,7 +159,6 @@ LR=cbind(LR,Date)
 png("LR.png")
 p1<-ggplot(data = LR, aes(x = Date, y = X2))+
   geom_line(color = "blue",size=1)+ scale_x_date(date_labels = "%d %b %y")+
-  ylim(0,800)+
   labs(x = "Date", y = "Likelihood Ratio", 
        title = "Tail Factor")
 p2<-ggplot(data = LR, aes(x = Date, y = X3))+ scale_x_date(date_labels = "%d %b %y")+
