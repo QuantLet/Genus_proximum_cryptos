@@ -20,8 +20,8 @@
 rm(list = ls())
 graphics.off()
 options(warn=-1)
-#setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\DFA_Cryptos")
-setwd("/home/rstudio/DFA_Cryptos/")
+setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\DFA_Cryptos")
+#setwd("/home/rstudio/DFA_Cryptos/")
 
 #Packages
 # install.packages("kernlab")
