@@ -19,8 +19,8 @@
 rm(list = ls())
 graphics.off()
 
-#setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\Conv_Cryptos")
-setwd("/home/rstudio/Conv_Cryptos/")
+setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\Conv_Cryptos")
+#setwd("/home/rstudio/Conv_Cryptos/")
 
 
 #Packages
@@ -142,8 +142,8 @@ for (i in (1:n_waves))
 
   mod2 <-lrm(type_crypto ~ X2, data = DF)
 
-  
-  mod3 <- lrm(type_crypto ~ X3, data = DF)
+  mod3 <-lrm(type_crypto ~ X3, data = DF)
+
 
   LR[i,1]<-i
   LR[i,2]<-mod1$deviance[2]
@@ -152,7 +152,7 @@ for (i in (1:n_waves))
   LR[i,5]<-mod1$stats[5]
   LR[i,6]<-mod2$stats[5]
   LR[i,7]<-mod3$stats[5]
- 
+
 }
 
 LR=cbind(LR,Date)
@@ -178,19 +178,19 @@ dev.off()
 png("p_values.png")
 p1<-ggplot(data = LR, aes(x = Date, y = X5))+
   geom_line(color = "blue",size=1)+ scale_x_date(date_labels = "%d %b %y")+
-  ylim(0,0.04)+
-  labs(x = "Date", y = "P-value", 
+
+  labs(x = "Date", y = "P-value",
        title = "Tail Factor")
 p2<-ggplot(data = LR, aes(x = Date, y = X6))+ scale_x_date(date_labels = "%d %b %y")+
   geom_line(color = "blue",size=1)+
-  ylim(0,0.04)+
-  labs(x = "Date", y = "P-value", 
+
+  labs(x = "Date", y = "P-value",
        title = "Moment Factor")
 
 p3<-ggplot(data = LR, aes(x = Date, y = X7))+ scale_x_date(date_labels = "%d %b %y")+
   geom_line(color = "blue",size=1)+
-  ylim(0,0.04)+
-  labs(x = "Date", y = "P-value", 
+
+  labs(x = "Date", y = "P-value",
        title = "Memory Factor")
 
 grid.arrange(p1, p2, p3, ncol=1, nrow = 3)
