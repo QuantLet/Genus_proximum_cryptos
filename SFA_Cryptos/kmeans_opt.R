@@ -25,8 +25,8 @@ X=F
 
 m=nrow(X) #getting the number of samples
 ToTest=ceil(sqrt(m))
-Cutoff=0.90
-Repeats=30
+Cutoff=0.94
+Repeats=100
 #unit-normalize
 MIN=min(X)
 MAX=max(X)

@@ -17,8 +17,8 @@
 rm(list = ls())
 graphics.off()
 
-#setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\SFA_Cryptos")
-setwd("/home/rstudio/SFA_Cryptos/")
+setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\SFA_Cryptos")
+#setwd("/home/rstudio/SFA_Cryptos/")
 
 #Packages
 # install.packages("kernlab")
@@ -266,8 +266,7 @@ n_types=length(index_type[1:(length(index_type)-1)])
 ####################################
 png("Factors1.png")
 p1<-ggplot( DF, aes( X1, X2))+  geom_point(aes(color = type_assets),size = 2) + 
-  xlim(-5,2)+
-  ylim(-3,6)+
+
   scale_color_manual(values = c("red", "green", "blue","black"))+theme_classic()+
   geom_text(data = filter(DF, label_show==1),aes(label=symb_assets))+
 labs(title = "Tail factor vs. Moment factor",x="Tail Factor", y="Moment factor")+ 
@@ -279,8 +278,7 @@ dev.off()
 png("Factors2.png")
 
 p2<-ggplot( DF, aes( X1, X3))+  geom_point(aes(color = type_assets),size = 2) + 
-  xlim(-4.5,2)+
-  ylim(-2.5,2.5)+
+
   scale_color_manual(values = c("red", "green", "blue","black"))+theme_classic()+
   geom_text(data = filter(DF, label_show==1),aes(label=symb_assets))+
   labs(title = "Tail factor vs. Memory factor",x="Tail Factor", y="Memory factor")+ 
@@ -290,8 +288,7 @@ dev.off()
 
 png("Factors3.png")
 p3<-ggplot( DF, aes( X2, X3))+  geom_point(aes(color = type_assets),size = 2) + 
-  xlim(-3,6)+
-  ylim(-2.5,3)+
+
   scale_color_manual(values = c("red", "green", "blue","black"))+theme_classic()+
   geom_text(data = filter(DF, label_show==1),aes(label=symb_assets))+
   labs(title = "Moment factor vs. Memory factor",x="Moment Factor", y="Memory factor")+ 
@@ -437,8 +434,3 @@ clusters=cbind(k_opt$IDX,symb_assets,type_assets)
 mytable <- table(k_opt$IDX,type_assets) 
 mytable
 
-# # The optimal number of clusters, as determined by the Elbow method, is k = 10; however,
-# # five clusters contain only cryptocurrencies, while the the other five clusters contain
-# # stocks, commodities and exchange rates, plus the cryptocurrencies Bitcoin and Tether.
-# # The quantlet Cluster_cryptos transformes these 10 clusters into 6 cluster, 5 for cryptos
-# and the others in a single cluster.
