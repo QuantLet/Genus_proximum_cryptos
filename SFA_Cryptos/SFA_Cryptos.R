@@ -1,10 +1,10 @@
 #################################################################
-#### A Statistical Classification of Cryptocurrencies
-##Pele, Wesselhoft, Hardle, Kolossiatis, Yatracos (2020) #####
+#### Are Cryptos becaming Alternative Assets?
+##Pele, Wesselhoft, Hardle, Kolossiatis, Yatracos (2021) #####
 # #################################################################
 # Name of Quantlet: SFA_cryptos
 # ################################################
-# Description: 'Performes Factor Analysis on a dataset of 23 variables, 
+# Description: 'Performes Factor Analysis on a dataset of 24 variables, 
 #  describing cryptos, stocks, FX and commodities.'
 # 
 # Keywords: cryptocurrency, genus proximum, classiffication, multivariate analysis, 
@@ -17,7 +17,7 @@
 rm(list = ls())
 graphics.off()
 
-setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\SFA_Cryptos")
+setwd("D:\\GITHUB\\Genus_proximum_cryptos\\SFA_Cryptos")
 #setwd("/home/rstudio/SFA_Cryptos/")
 
 #Packages
@@ -77,10 +77,10 @@ library(e1071)
 # Variance, Skewness, Kurtosis, Stable_alpha, Stable_gamma, Quantiles, 
 # Conditional Tail Expectations,ARCH and GARCH parameters.
 #   
-data <- read.csv("23D.csv")
+data <- read.csv("24D.csv")
 
 head(data)
-stats=data[4:26]
+stats=data[1:24]
 
 ############################################
 #### Factor Model#####
@@ -138,13 +138,7 @@ dev.off()
 df <- data.frame(loadings[,1], loadings[,2], loadings[,3])
 
 names(df) <- c("1", "2", "3")
-rownames(df) <-  c("Variance", "Skewness","Kurtosis",
-                   "Stable_alpha","Stable_gamma",
-                   "Q_{5%}","Q_{2.5%}","Q_{1%}","Q_{0.5%}",
-                   "CTE_{5%}","CTE_{2.5%}","CTE_{1%}","CTE_{0.5%}",
-                   "Q_{95%}","Q_{97.5%}","Q_{99%}","Q_{99.5%}",
-                   "CTE_{95%}","CTE_{97.5%}","CTE_{99%}","CTE_{99.5%}"
-                   ,"GARCH parameter","ARCH parameter")
+rownames(df) <-  colnames(stats)
 df
 df2=melt(t(df), id.vars = rownames(df))
 
@@ -178,13 +172,7 @@ plot(ucircle, type = "l", lty = "solid", col = "blue", xlab = "Tail factor",
      ylab = "Memory factor", main="Correlations between variables and factors: 1 and 2"
      , cex.lab = 1, cex.axis = 1, cex.main = 1, lwd = 2)
 abline(h = 0, v = 0)
-label = c("Variance", "Skewness","Kurtosis",
-          "Stable_alpha","Stable_gamma",
-           "Q_{5%}","Q_{2.5%}","Q_{1%}","Q_{0.5%}",
-          "CTE_{5%}","CTE_{2.5%}","CTE_{1%}","CTE_{0.5%}",
-          "Q_{95%}","Q_{97.5%}","Q_{99%}","Q_{99.5%}",
-          "CTE_{95%}","CTE_{97.5%}","CTE_{99%}","CTE_{99.5%}"
-          ,"GARCH parameter","ARCH parameter")
+label =colnames(stats)
 points(loadings[,1],loadings[,2],col="red",pch = 16,type="p",cex = 1.5)
 text(loadings[,1],loadings[,2],label,cex = 1)
 dev.off()
@@ -231,14 +219,14 @@ dev.off()
 #Intermediary calculations
 ##################################################
 
-type_assets<-as.character(data$type_assets)
-symb_assets<-as.character(data$symb_assets)
-index_crypto=as.integer(str_detect(type_assets,"Crypto"))
+type_assets<-as.character(data$Type)
+symb_assets<-as.character(data$Symbol)
+index_crypto=as.integer(str_detect(type_assets,"1.Crypto"))
 
 Check <-c("BTC","ETH","XRP","BCH","LTC","USDT",	"BNB","EOS","XMR") 
 
 index_show=match( Check,symb_assets)
-colors=c("red","green","blue","black")[as.numeric(data$type_assets)]
+colors=c("green","black","purple","blue","red","yellow")[as.numeric(as.factor(data$Type))]
 
 
 DF=data.frame(F)
@@ -247,7 +235,7 @@ DF$label_show=as.numeric(apply(DF, 1, function(r) any(r %in% Check)))
 plot( F[,1],  F[,2], 
       col=colors,
       xlab = "Tail Factor",
-      ylab = "Moment factor", main="Tail factor vs. Moment factor",
+      ylab = "Memory factor", main="Tail factor vs. Memory factor",
       cex.lab = 1, cex.axis = 1, cex.main = 1,
       pch = 20, cex = 1.8)
 
@@ -267,9 +255,9 @@ n_types=length(index_type[1:(length(index_type)-1)])
 png("Factors1.png")
 p1<-ggplot( DF, aes( X1, X2))+  geom_point(aes(color = type_assets),size = 2) + 
 
-  scale_color_manual(values = c("red", "green", "blue","black"))+theme_classic()+
+  scale_color_manual(values = c("green","black","purple","blue","red","yellow"))+theme_classic()+
   geom_text(data = filter(DF, label_show==1),aes(label=symb_assets))+
-labs(title = "Tail factor vs. Moment factor",x="Tail Factor", y="Moment factor")+ 
+labs(title = "Tail factor vs. Memory factor",x="Tail Factor", y="Memory factor")+ 
  geom_density_2d(aes(color = type_assets),contour=TRUE)
 p1
 
@@ -279,9 +267,9 @@ png("Factors2.png")
 
 p2<-ggplot( DF, aes( X1, X3))+  geom_point(aes(color = type_assets),size = 2) + 
 
-  scale_color_manual(values = c("red", "green", "blue","black"))+theme_classic()+
+  scale_color_manual(values = c("green","black","purple","blue","red","yellow"))+theme_classic()+
   geom_text(data = filter(DF, label_show==1),aes(label=symb_assets))+
-  labs(title = "Tail factor vs. Memory factor",x="Tail Factor", y="Memory factor")+ 
+  labs(title = "Tail factor vs. Moment factor",x="Tail Factor", y="Moment factor")+ 
   geom_density_2d(aes(color = type_assets),contour=TRUE)
 p2
 dev.off()
@@ -289,9 +277,9 @@ dev.off()
 png("Factors3.png")
 p3<-ggplot( DF, aes( X2, X3))+  geom_point(aes(color = type_assets),size = 2) + 
 
-  scale_color_manual(values = c("red", "green", "blue","black"))+theme_classic()+
+  scale_color_manual(values = c("green","black","purple","blue","red","yellow"))+theme_classic()+
   geom_text(data = filter(DF, label_show==1),aes(label=symb_assets))+
-  labs(title = "Moment factor vs. Memory factor",x="Moment Factor", y="Memory factor")+ 
+  labs(title = "Memory factor vs. Moment factor",x="Memory Factor", y="Moment factor")+ 
   geom_density_2d(aes(color = type_assets),contour=TRUE)
 p3
 
@@ -303,8 +291,8 @@ dev.off()
 png("3D_Scatter.png")
 scatterplot3d(DF[,1:3], pch = 16, color=colors,   main="3D Scatter Plot",
               xlab = "Tail Factor",
-              ylab = "Moment Factor",
-              zlab = "Memory Factor")
+              ylab = "Memory Factor",
+              zlab = "Moment Factor")
 dev.off()
 
 ########################################
@@ -314,7 +302,7 @@ dev.off()
 # Encoding the target feature as factor 
 
 
-DF$type_crypto=as.numeric(apply(DF, 1, function(r) any(r %in% "Crypto")))
+DF$type_crypto=as.numeric(apply(DF, 1, function(r) any(r %in% "1.Crypto")))
 DF$type_crypto = factor(DF$type_crypto, levels = c(0, 1)) 
 colors_class=c("black","green")[as.numeric(DF$type_crypto)]
 
@@ -344,7 +332,7 @@ png("LDA.png")
 plot( DF[,1:2], 
       col=colors_class,
       xlab = "Tail Factor",
-      ylab = "Moment factor", main="Linear Discriminant Analysis",
+      ylab = "Memory factor", main="Linear Discriminant Analysis",
       cex.lab = 1, cex.axis = 1, cex.main = 1,
       pch = 20, cex = 1.5)
 points(F[index_show,1],  F[index_show,2],col="green",pch = 20,type="p",cex = 1.5)
@@ -369,7 +357,7 @@ png("QDA.png")
 plot( DF[,1:2], 
       col=colors_class,
       xlab = "Tail Factor",
-      ylab = "Moment factor", main="Quadratic Discriminant Analysis",
+      ylab = "Memory factor", main="Quadratic Discriminant Analysis",
       cex.lab = 1, cex.axis = 1, cex.main = 1,
       pch = 20, cex = 1.5)
 points(F[index_show,1],  F[index_show,2],col="green",pch = 20,type="p",cex = 1.5)
@@ -411,26 +399,26 @@ points(set, pch = 20, col=colors_class,cex = 1.5)
 text(set[index_show,1],  set[index_show,2], Check,cex = 1) 
 #points(grid_set, pch = '.', col = ifelse(y_grid == 1, 'white', 'white')) 
 title(main = 'SVM', 
-      xlab = 'Tail Factor', ylab = 'Moment Factor')
+      xlab = 'Tail Factor', ylab = 'Memory Factor')
 dev.off()
 
 ###################################
 ###K-means clustering
 ##################################
-k_opt=kmeans_opt(DF[,1:3])
-k_opt$K
-k_opt$IDX
+kmean=kmeans(DF[,1:3],6)
+
+kmean$cluster
 png("3D_Scatter_Clusters.png")
 
-scatterplot3d(DF[,1:3], pch = 16, color=as.numeric(k_opt$IDX),   main="3D Scatter Plot",
+scatterplot3d(DF[,1:3], pch = 16, color=as.numeric(kmean$cluster),   main="3D Scatter Plot",
               xlab = "Tail Factor",
-              ylab = "Moment Factor",
-              zlab = "Memory Factor")
+              ylab = "Memory Factor",
+              zlab = "Moment Factor")
 
 dev.off()
-clusters=cbind(k_opt$IDX,symb_assets,type_assets)
+clusters=cbind(kmean$cluster,symb_assets,type_assets)
 # 2-Way Frequency Table
 
-mytable <- table(k_opt$IDX,type_assets) 
+mytable <- table(kmean$cluster,type_assets) 
 mytable
 

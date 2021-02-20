@@ -20,7 +20,7 @@
 rm(list = ls())
 graphics.off()
 options(warn=-1)
-setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\DFA_Cryptos")
+setwd("D:\\GITHUB\\Genus_proximum_cryptos\\DFA_Cryptos")
 #setwd("/home/rstudio/DFA_Cryptos/")
 
 #Packages
@@ -74,7 +74,7 @@ library(scales)
 # 
 # In order to derive the dynamics of the assets' universe, we used an 
 # expanding window approach, described below:
-# -The 23-dimensional dataset is estimated for the time interval [1; t0] =
+# -The 24-dimensional dataset is estimated for the time interval [1; t0] =
 # [01=02=2014; 10=31=2016].
 # -Time window is extended on a daily basis, up to T=08/30/2019 and for each step
 # in time, the dataset is projected on the 2-dimensional space defined by the tail
@@ -82,45 +82,45 @@ library(scales)
 # #   
 
 options(warn=-1)
-data_dynamic <- read.csv('dynamic_dataset.csv') #dynamic dataset
-data <- read.csv("23D.csv") #static dataset
-stats=data[4:26]
-fa=factor_an_static(stats[,1:23])
+data_dynamic <- read.csv('dynamic_dataset_2021.csv') #dynamic dataset
+data <- read.csv("24D.csv") #static dataset
+stats=data[1:24]
+fa=factor_an_static(stats[,1:24])
 
 eigval=fa$eigval #eigenvalues
 eigvec=fa$eigvec #eigenvector
 loadings=fa$loadings #loadings
 f2=fa$f2 # standardized scoring coefficients
 
-n_waves=740 # number of waves
+n_waves=1161 # number of waves
 
-for (i in c(50,300,500,740))
+for (i in c(700, 800, 1000))
 {
   stats_t=data_dynamic[ which(data_dynamic$wave==i) ,]
   stats_t[is.na(stats_t)] <- 0
   
-  n1 = nrow(stats_t[,1:23]);
-  m  = colMeans(stats_t[,1:23], na.rm = FALSE, dims = 1)
+  n1 = nrow(stats_t[,1:24]);
+  m  = colMeans(stats_t[,1:24], na.rm = FALSE, dims = 1)
   # standardizing data
   
   
-  Rho=cor(stats_t[,1:23])
+  Rho=cor(stats_t[,1:24])
   Rho[is.na(Rho)] <- 0
   
-  std=repmat(sqrt((colVars(stats_t[,1:23]))),n1,1)
+  std=repmat(sqrt((colVars(stats_t[,1:24]))),n1,1)
   
-  zz = as.matrix((stats_t[,1:23]-repmat(m,n1,1))/std)
+  zz = as.matrix((stats_t[,1:24]-repmat(m,n1,1))/std)
   zz[is.na(zz)] <- 0
   F=zz%*%f2
   
   type_assets<-as.character(stats_t$type_assets)
   symb_assets<-as.character(stats_t$symb_assets)
-  index_crypto=as.integer(str_detect(type_assets,"Crypto"))
+  index_crypto=as.integer(str_detect(type_assets,"1.Crypto"))
   
   Check <-c("BTC","ETH","XRP","BCH","LTC","USDT",	"BNB","EOS","XMR") 
   
   index_show=match( Check,symb_assets)
-  colors=c("red","green","blue","black")[as.numeric(stats_t$type_assets)]
+  colors=c("green","black","purple","blue","red","yellow")[as.numeric(stats_t$type_assets)]
   DF=data.frame(F)
   DF=cbind(DF, symb_assets,type_assets,index_crypto)
   DF$label_show=as.numeric(apply(DF, 1, function(r) any(r %in% Check)))
@@ -135,17 +135,17 @@ for (i in c(50,300,500,740))
   # points(F[index_show,1],  F[index_show,2],col="green",pch = 20,type="p",cex = 1.8)
   # text(F[index_show,1],  F[index_show,2], Check,cex = 1) 
   progress=percent(i/n_waves)
-  ttl=paste("Data: 1/1/2014 - ",stats_t$Date[1]," (",progress,")",sep="")
+  ttl=paste("Data: 1/3/2014 - ",stats_t$Date[1]," (",progress,")",sep="")
   
   
   p1<-ggplot( DF, aes( X1, X2))+  geom_point(aes(color = type_assets),size = 2) + 
-    xlim(-1,8)+
-    ylim(-3,14)+
-    scale_color_manual(values = c("red", "green", "blue","black"))+theme_classic()+
+    xlim(-1,9)+
+    ylim(-4,8)+
+    scale_color_manual(values = c("green","black","purple","blue","red","yellow"))+theme_classic()+
     geom_text(data = filter(DF, label_show==1),aes(label=symb_assets))+
-    labs(title = ttl,x="Tail Factor", y="Moment factor")+ 
+    labs(title = ttl,x="Tail Factor", y="Memory factor")+ 
     geom_density_2d(aes(color = type_assets),contour=TRUE)
-  print(p1)
+print(p1)
   
   
   

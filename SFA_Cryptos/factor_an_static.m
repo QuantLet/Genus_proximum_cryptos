@@ -1,4 +1,4 @@
-function [loadings,F,f2] = factor_an_static(stats)
+function [loadings,F,f2,eigval, eigvec] = factor_an_static(stats)
 % Factor Model
 
 % standardizing data
@@ -8,7 +8,19 @@ m  = mean(stats);
 zz = (stats - repmat(m,n1,1))./repmat(sqrt(var(stats)), n1, 1);
 Cor=corr(zz);
 
+%%
+Rho=corr(stats);
+n1 = length(stats);
+m  = mean(stats);
+zz = (stats - repmat(m,n1,1))./repmat(sqrt(var(stats)), n1, 1);
+Cor=corr(zz);
 
+[eigvec,eigval] = eigs(Cor);
+o=ones(size(eigvec(:,1:3)));
+egv=eigval(1:3,1:3);
+E               = ones(size(eigvec(:,1:3)))*eigval(1:3,1:3);
+Q     =sqrt(E).*eigvec(:,1:3);
+%%
 %% Principal Component Method with varimax rotation
 % 
 [eigvec,eigval] = eigs(Cor);
@@ -22,8 +34,9 @@ Q     =sqrt(E).*eigvec(:,1:3);
 [ld, T] = rotatefactors(Q, 'method','varimax');
 % T is the Orthogonal Transformation Matrix;
 loadings=ld;
+loadings(:,1)=ld(:,1);
 loadings(:,2)=-ld(:,3);
-loadings(:,3)=-ld(:,2);
+loadings(:,3)= ld(:,2);
 % f2 contains the standardized scoring coefficients;
 f2=inv(Rho)*loadings;
 

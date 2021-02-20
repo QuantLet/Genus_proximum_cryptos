@@ -19,7 +19,7 @@
 rm(list = ls())
 graphics.off()
 
-setwd("D:\\PROIECTE\\HORIZON 2020\\Use Case DP\\rstudio-export\\Conv_Cryptos")
+setwd("D:\\GITHUB\\Genus_proximum_cryptos\\Conv_Cryptos")
 #setwd("/home/rstudio/Conv_Cryptos/")
 
 
@@ -86,22 +86,22 @@ library(scales)
 # factor and the moment factor, estimated for the entire time period.
 # #   
 
-data_dynamic <- read.csv('dynamic_dataset.csv') #dynamic dataset
-data <- read.csv("23D.csv") #static dataset
-stats=data[4:26]
-fa=factor_an_static(stats[,1:23])
+data_dynamic <- read.csv('dynamic_dataset_2021.csv') #dynamic dataset
+data <- read.csv("24D.csv") #static dataset
+stats=data[1:24]
+fa=factor_an_static(stats[,1:24])
 
 eigval=fa$eigval #eigenvalues
 eigvec=fa$eigvec #eigenvector
 loadings=fa$loadings #loadings
 f2=fa$f2 # standardized scoring coefficients
 
-n_waves=740 # number of waves
+n_waves=1161 # number of waves
 
 LR <- data.frame(matrix(nrow = n_waves, ncol = 7))
 Date<-unique(data_dynamic$Date)
 
-Date<-anydate(Date)
+Date<-as.Date(Date, format="%m/%d/%y")
 
 
 for (i in (1:n_waves))
@@ -109,31 +109,31 @@ for (i in (1:n_waves))
   stats_t=data_dynamic[ which(data_dynamic$wave==i) ,]
   stats_t[is.na(stats_t)] <- 0
   
-  n1 = nrow(stats_t[,1:23]);
-  m  = colMeans(stats_t[,1:23], na.rm = FALSE, dims = 1)
+  n1 = nrow(stats_t[,1:24]);
+  m  = colMeans(stats_t[,1:24], na.rm = FALSE, dims = 1)
   # standardizing data
   
   
-  Rho=cor(stats_t[,1:23])
+  Rho=cor(stats_t[,1:24])
   Rho[is.na(Rho)] <- 0
   
-  std=repmat(sqrt((colVars(stats_t[,1:23]))),n1,1)
+  std=repmat(sqrt((colVars(stats_t[,1:24]))),n1,1)
   
-  zz = as.matrix((stats_t[,1:23]-repmat(m,n1,1))/std)
+  zz = as.matrix((stats_t[,1:24]-repmat(m,n1,1))/std)
   zz[is.na(zz)] <- 0
   F=zz%*%f2
   
   type_assets<-as.character(stats_t$type_assets)
   symb_assets<-as.character(stats_t$symb_assets)
-  index_crypto=as.integer(str_detect(type_assets,"Crypto"))
+  index_crypto=as.integer(str_detect(type_assets,"1.Crypto"))
   
   Check <-c("BTC","ETH","XRP","BCH","LTC","USDT",	"BNB","EOS","XMR") 
   
   index_show=match( Check,symb_assets)
-  colors=c("red","green","blue","black")[as.numeric(stats_t$type_assets)]
+  colors=c("green","black","purple","blue","red","yellow")[as.numeric(stats_t$type_assets)]
   DF=data.frame(F)
   DF=cbind(DF, symb_assets,type_assets,index_crypto)
-  DF$type_crypto=as.numeric(apply(DF, 1, function(r) any(r %in% "Crypto")))
+  DF$type_crypto=as.numeric(apply(DF, 1, function(r) any(r %in% "1.Crypto")))
   DF$type_crypto = factor(DF$type_crypto, levels = c(0, 1)) 
   colors_class=c("black","green")[as.numeric(DF$type_crypto)]
   
@@ -161,15 +161,16 @@ p1<-ggplot(data = LR, aes(x = Date, y = X2))+
   geom_line(color = "blue",size=1)+ scale_x_date(date_labels = "%d %b %y")+
   labs(x = "Date", y = "Likelihood Ratio", 
        title = "Tail Factor")
+p1
 p2<-ggplot(data = LR, aes(x = Date, y = X3))+ scale_x_date(date_labels = "%d %b %y")+
   geom_line(color = "blue",size=1)+
   labs(x = "Date", y = "Likelihood Ratio", 
-       title = "Moment Factor")
+       title = "Memory Factor")
 
 p3<-ggplot(data = LR, aes(x = Date, y = X4))+ scale_x_date(date_labels = "%d %b %y")+
   geom_line(color = "blue",size=1)+
   labs(x = "Date", y = "Likelihood Ratio", 
-       title = "Memory Factor")
+       title = "Moment Factor")
 
 grid.arrange(p1, p2, p3, ncol=1, nrow = 3)
 
@@ -185,13 +186,13 @@ p2<-ggplot(data = LR, aes(x = Date, y = X6))+ scale_x_date(date_labels = "%d %b 
   geom_line(color = "blue",size=1)+
 
   labs(x = "Date", y = "P-value",
-       title = "Moment Factor")
+       title = "Memory Factor")
 
 p3<-ggplot(data = LR, aes(x = Date, y = X7))+ scale_x_date(date_labels = "%d %b %y")+
   geom_line(color = "blue",size=1)+
 
   labs(x = "Date", y = "P-value",
-       title = "Memory Factor")
+       title = "Moment Factor")
 
 grid.arrange(p1, p2, p3, ncol=1, nrow = 3)
 
