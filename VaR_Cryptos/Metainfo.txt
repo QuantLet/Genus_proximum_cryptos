@@ -1,0 +1,18 @@
+Name of Quantlet: VaR_cryptos
+
+Published in: Genus_proximum_cryptos
+
+Description: 'Shows the impact of adding cryptocurrencies in a classical assets portfolio, from the point of view of market risk measures like VaR (Value-at-Risk), volatility and Sharpe Ratio.'
+
+Keywords: cryptocurrency, genus proximum, classiffication, multivariate analysis, factor models
+ 
+Author: Daniel Traian Pele
+
+See also: SFA_cryptos, DFA_cryptos
+
+Submitted: 2021-04-28
+
+Datafiles: 'VaR_function.m, data_dynamic_jan_2021.mat'
+
+
+
