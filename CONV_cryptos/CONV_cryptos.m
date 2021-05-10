@@ -192,18 +192,19 @@ hold on
 plot(time,mu_classical(:,20)*100,'LineWidth',2 ,'color',color_black);
 
 ylabel(est_labels((20)));
-
+xlabel('Time');
 ax1 = subplot(3,1,2); % top subplot
 plot(time,mu_cryptos(:,21),'LineWidth',2,'color',color_green);
 hold on
 plot(time,mu_classical(:,21) ,'LineWidth',2,'color',color_black);
 ylabel(est_labels((21)));
-
+xlabel('Time');
 ax1 = subplot(3,1,3); % top subplot
 plot(time,mu_cryptos(:,22) ,'LineWidth',2,'color',color_green);
 hold on
 plot(time,mu_classical(:,22),'LineWidth',2,'color',color_black);
 ylabel(est_labels((22)));
+xlabel('Time');
 %{
 ax1 = subplot(4,1,4); % top subplot
 plot(time,mu_cryptos(:,17) ,'color',color_green);
@@ -231,18 +232,19 @@ hold on
 plot(time,mu_classical(:,2),'LineWidth',2 ,'color',color_black);
 
 ylabel(est_labels((2)));
-
+xlabel('Time');
 ax1 = subplot(3,1,2); % top subplot
 plot(time,mu_cryptos(:,3),'LineWidth',2,'color',color_green);
 hold on
 plot(time,mu_classical(:,3) ,'LineWidth',2,'color',color_black);
 ylabel(est_labels((3)));
-
+xlabel('Time');
 ax1 = subplot(3,1,3); % top subplot
 plot(time,mu_cryptos(:,4) ,'LineWidth',2,'color',color_green);
 hold on
 plot(time,mu_classical(:,4),'LineWidth',2,'color',color_black);
 ylabel(est_labels((4)));
+xlabel('Time');
 %{
 ax1 = subplot(4,1,4); % top subplot
 plot(time,mu_cryptos(:,17) ,'color',color_green);

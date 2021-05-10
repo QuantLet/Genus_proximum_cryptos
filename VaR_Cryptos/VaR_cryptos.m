@@ -196,9 +196,9 @@ h=figure()
 
 plot(time(WE+1:end),y(WE+1:end,1),'color',color_black);
 hold on;
-plot(time(WE+1:end),-VaR_crypto(WE+1:end,3),'--','color',color_red);
+plot(time(WE+1:end),-VaR_crypto(WE+1:end,6),'--','color',color_red);
 hold off;
-%{
+
 %%
 VaR=NaN(T,6);
 for t = WE+1:T
@@ -262,24 +262,7 @@ for t = WE+1:T
     VaR(t,6) =-tinv(p,nu)*sqrt((nu-2)/nu)*sqrt(h)*value+mean(window); 
 end
 
-%% Plot GARCH volatility
-h=figure()
-ax1 = subplot(3,1,1); % top subplot
-plot(time,VaR(:,2),'color',color_black);
-ylabel('Volatility');
-xlabel('Time');
-title('Classical assets');
-ax2 = subplot(3,1,2); % top subplot
-plot(time,VaR(:,1),'color',color_green);
-ylabel('Volatility');
-xlabel('Time');
-title('Cryptos');
-ax3 = subplot(3,1,3); % top subplot
-plot(time,VaR(:,3),'color',color_red);
-ylabel('Volatility');
-title('Mixed portfolio');
-xlabel('Time');
-hold off;
+
 
 %% %% Plot VaR
 h=figure()
@@ -307,3 +290,21 @@ title('Mixed portfolio');
 xlabel('Time');
 hold off;
 %}
+%% Plot GARCH volatility
+h=figure()
+ax1 = subplot(3,1,1); % top subplot
+plot(time,VaR(:,2),'color',color_black);
+ylabel('Volatility');
+xlabel('Time');
+title('Classical assets');
+ax2 = subplot(3,1,2); % top subplot
+plot(time,VaR(:,1),'color',color_green);
+ylabel('Volatility');
+xlabel('Time');
+title('Cryptos');
+ax3 = subplot(3,1,3); % top subplot
+plot(time,VaR(:,3),'color',color_red);
+ylabel('Volatility');
+title('Mixed portfolio');
+xlabel('Time');
+hold off;
