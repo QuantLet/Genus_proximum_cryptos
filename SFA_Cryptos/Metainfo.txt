@@ -1,0 +1,17 @@
+Name of Quantlet: SFA_cryptos
+
+Published in: Genus_proximum_cryptos
+
+Description: 'Performes Factor Analysis on a dataset of 24 variables, describing cryptos, stocks, FX, bonds, real estate and commodities.'
+
+Keywords: cryptocurrency, genus proximum, classiffication, multivariate analysis, factor models
+ 
+Author: Daniel Traian Pele
+
+See also: FA_cryptos, DFA_cryptos
+
+Submitted: 2019-03-21
+
+Datafiles: 'factor_an_static.m, stats_static.mat'
+
+Example: Run the code and get the projection on the 3 main factors
