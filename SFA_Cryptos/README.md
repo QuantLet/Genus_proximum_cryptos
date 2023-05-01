@@ -24,19 +24,19 @@ Example: Run the code and get the projection on the 3 main factors
 
 ```
 
-![Picture1](factors_1.png)
+![Picture1](Figure_1.png)
 
-![Picture2](factors_2.png)
+![Picture2](Figure_2.png)
 
-![Picture3](factors_3.png)
+![Picture3](Figure_3.png)
 
-![Picture4](scores_1.png)
+![Picture4](Figure_4.png)
 
-![Picture5](scores_2.png)
+![Picture5](Figure_5.png)
 
-![Picture6](scores_3.png)
+![Picture6](Figure_6.png)
 
-![Picture7](scree_plot.png)
+![Picture7](Figure_7.png)
 
 ### MATLAB Code
 ```matlab
