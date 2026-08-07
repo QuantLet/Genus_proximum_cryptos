@@ -12,6 +12,14 @@ See also: FA_cryptos, DFA_cryptos
 
 Submitted: 2019-03-21
 
-Datafiles: 'factor_an_static.m, stats_static.mat'
+Datafiles: '24D.csv, new_assets_2021_c.csv'
 
 Example: Run the code and get the projection on the 3 main factors
+
+Note: 'new_assets_2021_c.csv (extract new_assets_2021_c.rar) holds the raw daily
+log-returns for the full asset universe in long format, with columns
+Name, Symbol, type, logreturn, type_num, name_symb, date - 906 assets over
+1740 trading days, 2014-01-03 to 2020-11-30. Note that SFA_cryptos.m refers to it
+by an absolute local path. Ready-to-use reshaped versions of the same data
+(wide matrix, tidy long, asset metadata, R bundle) are in RAW_data/ in the
+repository root. 24D.csv is the static 24-variable dataset used by SFA_Cryptos.R.'
